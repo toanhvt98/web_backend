@@ -48,6 +48,9 @@ class UserCreateView(generics.CreateAPIView):
                     "full_name": user.get_full_name(),
                     "department": user.department_id.department_name,
                     "role": user.role_id.role_name,
+                    "rooms": Rooms.objects.filter(
+                        department_id=user.department_id
+                    ).values("room_name"),
                 },
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
