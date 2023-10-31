@@ -37,7 +37,7 @@ CORS_ALLOWED_CREDENTIALS = True
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        
     ),
     # "DEFAULT_PERMISSION_CLASSES": [
     #     "rest_framework.permissions.IsAuthenticated",
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "users.apps.UsersConfig",
+    "departments.apps.DepartmentsConfig",
 ]
 
 MIDDLEWARE = [
@@ -147,7 +148,7 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
-    "AUTH_HEADER_TYPES": ("Bearer",),
+    # "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 AUTH_USER_MODEL = "users.UserAccount"

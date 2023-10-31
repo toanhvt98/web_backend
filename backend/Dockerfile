@@ -1,6 +1,6 @@
 FROM python:3.11.5
 
-WORKDIR /usr/src/backend
+WORKDIR /usr/src/backend/
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -22,4 +22,4 @@ RUN chmod +x /usr/src/backend/entrypoint.sh
 COPY . .
 CMD ["gunicorn", "backend.wsgi:application", "--bind","0.0.0.0:8000"]
 # run entrypoint.sh
-ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
+# ENTRYPOINT ["/usr/src/backend/entrypoint.sh"]
