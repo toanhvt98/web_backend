@@ -20,6 +20,6 @@ class RoomDepartmentSerializer(serializers.ModelSerializer):
     def get_fields(self):
         fields = super(RoomDepartmentSerializer, self).get_fields()
         request = self.context.get('request')
-        if request and request.method != 'POST':
+        if request and request.method == 'GET':
             fields['department_id'] = DepartmentSerializer()
         return fields

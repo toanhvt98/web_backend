@@ -5,10 +5,15 @@ from rest_framework.generics import *
 from .serializers import *
 from rest_framework.response import Response
 
+"""
+    All Classes below are for TypeOfDepartmentModel
+"""
+
 
 class ListCreateTypeOfDepartmentView(ListCreateAPIView):
     queryset = TypeOfDepartmentModel.objects.all()
     serializer_class = TypeOfDepartmentSerializer
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -19,6 +24,18 @@ class ListCreateTypeOfDepartmentView(ListCreateAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class RetrieveUpdateDestroyTypeOfDepartmentView(RetrieveUpdateDestroyAPIView):
+    queryset = TypeOfDepartmentModel.objects.all()
+    serializer_class = TypeOfDepartmentSerializer
+    lookup_field = "pk"
+
+
+"""
+    All Classes below are for DepartmentModel
+"""
+
 
 class ListCreateDepartmentView(ListCreateAPIView):
     queryset = DepartmentModel.objects.all()
@@ -35,7 +52,13 @@ class ListCreateDepartmentView(ListCreateAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-class ListCreateRoomDepartmentView(ListCreateAPIView):
+
+"""
+    All Classes below are for RoomDepartmentModel
+"""
+
+
+class CreateRoomDepartmentView(CreateAPIView):
     queryset = RoomDepartmentModel.objects.all()
     serializer_class = RoomDepartmentSerializer
 
@@ -49,3 +72,9 @@ class ListCreateRoomDepartmentView(ListCreateAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class RetrieveUpdateDestroyRoomDepartmentView(RetrieveUpdateDestroyAPIView):
+    queryset = RoomDepartmentModel.objects.all()
+    serializer_class = RoomDepartmentSerializer
+    lookup_field = "pk"
