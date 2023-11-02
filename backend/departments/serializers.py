@@ -15,11 +15,5 @@ class DepartmentSerializer(serializers.ModelSerializer):
 class RoomDepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomDepartmentModel
-        fields = ('id', 'roomDepartment_name','department_id',)
+        fields = ('id', 'roomDepartment_name','department_id','typeOfDepartment_id')
 
-    def get_fields(self):
-        fields = super(RoomDepartmentSerializer, self).get_fields()
-        request = self.context.get('request')
-        if request and request.method == 'GET':
-            fields['department_id'] = DepartmentSerializer()
-        return fields
