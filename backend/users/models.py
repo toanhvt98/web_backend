@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
+from departments.models import RoomDepartmentModel
 
 
 class UserManager(BaseUserManager):
@@ -41,3 +42,51 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     class Meta:
         db_table = "Users"
 
+
+class RoleModel(models.Model):
+    role_name = models.CharField(unique=True, max_length=50)
+    role_code = models.CharField(unique=True, max_length=50)
+
+    class Meta:
+        db_table = "Roles"
+
+
+class RoomDepartmentRoleUserModel(models.Model):
+    user_id = models.OneToOneField(
+        UserAccount,
+        on_delete=models.CASCADE,
+        related_name="user_id",
+        db_column="user_id",
+        verbose_name="Id của table Users",
+    )
+    roomDepartment_id = models.ForeignKey(
+        RoomDepartmentModel,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="roomDepartment_id",
+        db_column="roomDepartment_id",
+        verbose_name="Id của table RoomDepartments",
+    )
+    role_id = models.ForeignKey(
+        RoleModel,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="role_id",
+        db_column="role_id",
+        verbose_name="Id của table Roles",
+    )
+    canViewDashboard = models.BooleanField(default=False)
+    canCreateTask = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "RoomDepartmentRoleUser"
+        indexes = [
+            models.Index(
+                fields=[
+                    "roomDepartment_id",
+                    "role_id",
+                    "canViewDashboard",
+                    "canCreateTask",
+                ]
+            ),
+        ]
