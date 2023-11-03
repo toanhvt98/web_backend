@@ -49,7 +49,10 @@ class RoleModel(models.Model):
 
     class Meta:
         db_table = "Roles"
-
+        constraints = [
+            models.UniqueConstraint(fields=['role_name'], name='unique_role_name'),
+            models.UniqueConstraint(fields=['role_code'], name='unique_role_code'),
+        ]
 
 class RoomDepartmentRoleUserModel(models.Model):
     user_id = models.OneToOneField(

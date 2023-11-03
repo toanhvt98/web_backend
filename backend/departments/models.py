@@ -8,7 +8,13 @@ class TypeOfDepartmentModel(models.Model):  # Model này thể hiện loại kho
 
     class Meta:
         db_table = "TypesOfDepartment"
+        indexes = [
+            models.Index(fields=["type_name"]),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=['type_name'], name='unique_type_name'),
 
+        ]
 
 class DepartmentModel(models.Model):  # Model này thể hiện các trung tâm
     department_name = models.CharField(unique=True, max_length=200)
@@ -29,6 +35,10 @@ class DepartmentModel(models.Model):  # Model này thể hiện các trung tâm
             models.Index(fields=["typeOfDepartment_id", "department_code"]),
         ]
 
+        constraints = [
+            models.UniqueConstraint(fields=['department_name'], name='unique_department_name'),
+            models.UniqueConstraint(fields=['department_code'], name='unique_department_code'),
+        ]
 
 class RoomDepartmentModel(
     models.Model
@@ -48,4 +58,8 @@ class RoomDepartmentModel(
 
         indexes = [
             models.Index(fields=["department_id", "roomDepartment_code"]),
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=['roomDepartment_name'], name='unique_roomDepartment_name'),
+            models.UniqueConstraint(fields=['roomDepartment_code'], name='unique_roomDepartment_code'),
         ]

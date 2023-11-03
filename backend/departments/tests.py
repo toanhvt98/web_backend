@@ -16,42 +16,42 @@ class TestDepartment(TestCase):
     deparment = [
         {
             "department_name": "Trung tâm Tim mạch",
-            "department_code": "tttm",
+            "department_code": "TTTM",
             "isCenterDepartment": True,
         },
         {
             "department_name": "Trung tâm Đột quỵ",
-            "department_code": "ttdq",
+            "department_code": "TTDQ",
             "isCenterDepartment": True,
         },
         {
             "department_name": "Trung tâm Y, dược cổ truyền - Phục hồi chức năng",
-            "department_code": "ttydct-phcn",
+            "department_code": "TTYDCT-PHCN",
             "isCenterDepartment": True,
         },
         {
             "department_name": "Trung tâm Thận - Lọc máu",
-            "department_code": "ttt-lm",
+            "department_code": "TTT-LM",
             "isCenterDepartment": True,
         },
         {
             "department_name": "Trung tâm Ung bướu",
-            "department_code": "ttub",
+            "department_code": "TTUB",
             "isCenterDepartment": True,
         },
         {
             "department_name": "Trung tâm Huyết học - Truyền máu",
-            "department_code": "tthh-tm",
+            "department_code": "TTHH-TM",
             "isCenterDepartment": True,
         },
         {
             "department_name": "Trung tâm Xét nghiệm",
-            "department_code": "ttxn",
+            "department_code": "TTXN",
             "isCenterDepartment": True,
         },
         {
             "department_name": "Trung tâm Khám chữa bệnh chất lượng cao",
-            "department_code": "ttkcbclc",
+            "department_code": "TTKCB-CLC",
             "isCenterDepartment": True,
         },
         {
@@ -60,7 +60,9 @@ class TestDepartment(TestCase):
             "isCenterDepartment": False,
         },
     ]
-
+    role = {
+        1
+    }
     def checkDepartmentdepartment_code_dup(self):
         for i in range(len(self.deparment) - 1):
             for j in range(i + 1, len(self.deparment)):
