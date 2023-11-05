@@ -1,9 +1,11 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from .serializers import *
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework_simplejwt.tokens import AccessToken
 
 User = get_user_model()
 
@@ -45,7 +47,7 @@ class UserCreateView(generics.CreateAPIView):
                     "username": user.username,
                     "first_name": user.first_name,
                     "last_name": user.last_name,
-                    "full_name": f"{user.first_name} {user.last_name}".strip()
+                    "full_name": f"{user.first_name} {user.last_name}".strip(),
                 },
             }
             return Response(response_data, status=status.HTTP_201_CREATED)
@@ -56,3 +58,16 @@ class UserCreateView(generics.CreateAPIView):
             "errors": serializer.errors,
         }
         return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RetriveUserAccountView(APIView):
+    def get(self, request):
+        access_token = request.headers.get("Authorization").split(" ")[1]
+        validated_token = AccessToken(
+            access_token, verify=False
+        )  # Xác nhận token (verify=False cho phép xác thực không cần signature)
+
+        user_id = validated_token.payload["user_id"]  # Lấy user_id từ payload của token
+        user = RoomDepartmentRoleUserModel.objects.get(user_id=user_id)
+        serializer = RoomDepartmentRoleUserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)

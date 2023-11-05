@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from django.contrib.auth.password_validation import validate_password
+from departments.serializers import RoomDepartmentSerializer
 
 
 class CreateAccountSerializer(serializers.ModelSerializer):
@@ -21,7 +22,6 @@ class CreateAccountSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-
         user = UserAccount(
             username=validated_data.get("username"),
             first_name=validated_data.get("first_name"),
@@ -32,3 +32,33 @@ class CreateAccountSerializer(serializers.ModelSerializer):
         user.set_password(validated_data.get("password"))  # Đặt mật khẩu
         user.save()
         return user
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "is_active",
+            "is_superuser",
+            "is_staff",
+        )
+
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoleModel
+        fields = "__all__"
+
+
+class RoomDepartmentRoleUserSerializer(serializers.ModelSerializer):
+    user_id = AccountSerializer()
+    role_id = RoleSerializer()
+    roomDepartment_id = RoomDepartmentSerializer()
+
+    class Meta:
+        model = RoomDepartmentRoleUserModel
+        fields = "__all__"
