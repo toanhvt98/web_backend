@@ -15,3 +15,7 @@ def create_room_department_for_department(sender, instance, **kwargs):
 @receiver(pre_save, sender=DepartmentModel)
 def upper_department_code(sender, instance, **kwargs):
     instance.department_code = instance.department_code.upper()
+    
+@receiver(pre_save, sender=RoomDepartmentModel)
+def upper_department_code(sender, instance, **kwargs):
+    instance.roomDepartment_code = instance.roomDepartment_code.upper()
