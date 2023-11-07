@@ -55,10 +55,17 @@ class RoleSerializer(serializers.ModelSerializer):
 
 
 class RoomDepartmentRoleUserSerializer(serializers.ModelSerializer):
-    user_id = AccountSerializer()
-    role_id = RoleSerializer()
-    roomDepartment_id = RoomDepartmentSerializer()
+    user = AccountSerializer(source="user_id")
+    role = RoleSerializer(source="role_id")
+    roomDepartment = RoomDepartmentSerializer(source="roomDepartment_id")
 
     class Meta:
         model = RoomDepartmentRoleUserModel
-        fields = "__all__"
+        fields = (
+            "id",
+            "canViewDashboard",
+            "canCreateTask",
+            "user",
+            "role",
+            "roomDepartment",
+        )
