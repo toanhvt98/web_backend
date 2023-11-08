@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.decorators import authentication_classes
 
 User = get_user_model()
 
@@ -40,7 +41,6 @@ class UserCreateView(generics.CreateAPIView):
             user = serializer.instance
 
             response_data = {
-                "status": "success",
                 "message": f"Tạo thành công user {user.username}",
                 "data": {
                     "id": user.id,
@@ -61,27 +61,24 @@ class UserCreateView(generics.CreateAPIView):
 
 
 class RetriveUserAccountView(APIView):
+    
     def get(self, request):
-        try:
-            access_token = request.headers.get("Authorization").split(" ")[1]
-            validated_token = AccessToken(
-                access_token, verify=False
-            )  # Xác nhận token (verify=False cho phép xác thực không cần signature)
-
-            user_id = validated_token.payload[
-                "user_id"
-            ]  # Lấy user_id từ payload của token
-            user = RoomDepartmentRoleUserModel.objects.get(user_id=user_id)
-            if user.roomDepartment_id is not None or user.role_id is not None:
+        user = RoomDepartmentRoleUserModel.objects.get(user_id=request.user)
+        if user.user_id.is_superuser:
+            serializer = AccountSerializer(user.user_id)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            if (user.roomDepartment_id is not None) or (user.role_id is not None):
                 serializer = RoomDepartmentRoleUserSerializer(user)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
+            elif (user.roomDepartment_id is  None) or (user.role_id is  None):
                 return Response(
-                    {"error": "Không thể đăng nhập do chưa được phân quyền"},
+                    {"error": "Không thể đăng nhập do chưa được phân quyền. Liên hệ Admin để được phân quyền"},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
-        except:
-            return Response(
-                {"error": "Không tìm thấy token đăng nhập"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            elif user.is_active is False:
+                return Response(
+                    {"error": "Người dùng đang trong trạng thái không kích hoạt. Liên hệ Admin để kích hoạt"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
