@@ -61,24 +61,37 @@ class UserCreateView(generics.CreateAPIView):
 
 
 class RetriveUserAccountView(APIView):
-    
     def get(self, request):
-        user = RoomDepartmentRoleUserModel.objects.get(user_id=request.user)
-        if user.user_id.is_superuser:
-            serializer = AccountSerializer(user.user_id)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            if (user.roomDepartment_id is not None) or (user.role_id is not None):
-                serializer = RoomDepartmentRoleUserSerializer(user)
+        try:
+            user = RoomDepartmentRoleUserModel.objects.get(user_id=request.user)
+            if user.user_id.is_superuser:
+                serializer = AccountSerializer(user.user_id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            elif (user.roomDepartment_id is  None) or (user.role_id is  None):
-                return Response(
-                    {"error": "Không thể đăng nhập do chưa được phân quyền. Liên hệ Admin để được phân quyền"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-            elif user.is_active is False:
-                return Response(
-                    {"error": "Người dùng đang trong trạng thái không kích hoạt. Liên hệ Admin để kích hoạt"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
+            else:
+                if user.roomDepartment_id is not None and user.role_id is not None:
+                    serializer = RoomDepartmentRoleUserSerializer(user)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                elif user.roomDepartment_id is None or user.role_id is None:
+                    return Response(
+                        {
+                            "error": "Không thể đăng nhập do chưa được phân quyền. Liên hệ Admin để được phân quyền"
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                elif user.user_id.is_active is False:
+                    return Response(
+                        {
+                            "error": "Người dùng đang trong trạng thái không kích hoạt. Liên hệ Admin để kích hoạt"
+                        },
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+        except RoomDepartmentRoleUserModel.DoesNotExist:
+            return Response(
+                {"error": "Người dùng không tồn tại"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            return Response(
+                {"error": "Token đăng nhập không đúng hoặc đã hết hạn"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
