@@ -54,8 +54,7 @@ class UserCreateView(generics.CreateAPIView):
         # Custom error response
 
         error_data = {
-            "status": "error",
-            "errors": serializer.errors,
+            "error": serializer.errors,
         }
         return Response(error_data, status=status.HTTP_400_BAD_REQUEST)
 
